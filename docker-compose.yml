@@ -1,0 +1,48 @@
+version: '3'
+services:
+  pizza_db:
+    image: postgres
+    container_name: pizza_db
+    environment:
+      POSTGRES_HOST_AUTH_METHOD: trust
+    ports:
+      - "5533:5432"
+    volumes:
+      - pizza_db_volume:/data/postgres
+    networks:
+      - pizza_db_network
+    restart: unless-stopped
+  pizza_dbadmin:
+    container_name: pizza_dbadmin
+    image: dpage/pgadmin4:4.16
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL:-pgadmin4@pgadmin.org}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD:-admin}
+    volumes:
+      - pizza_pgadmin_volume:/root/.pgadmin
+    ports:
+      - "${PGADMIN_PORT:-4005}:80"
+    networks:
+      - pizza_db_network
+    restart: unless-stopped
+  pizza_api:
+    container_name: pizza_api
+    environment:
+      TZ: "Europe/Zurich"
+    build: .
+    command: python manage.py runserver 0.0.0.0:4501
+    volumes:
+      - .:/code
+    ports:
+      - "4501:4501"
+    networks:
+      - pizza_db_network
+    depends_on:
+      - pizza_db
+networks:
+  pizza_db_network:
+    driver: bridge
+
+volumes:
+  pizza_db_volume:
+  pizza_pgadmin_volume:

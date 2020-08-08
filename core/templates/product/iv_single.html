@@ -1,0 +1,45 @@
+{% extends "layouts/base-site.html" %}
+{% block content %}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-9">
+
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li aria-current="page" class="breadcrumb-item active"><small>Pizza > <a
+                            href="{% url 'productByTypeId' 1 %}"> Pizza (30 cm)</a> > {{ product.name }}</small>
+                    </li>
+                </ol>
+            </nav>
+            {% if request.session.orderItemList %}
+                <nav class="navbar navbar-light bg-light">
+                    <a class="btn btn-warning btn-sm" target="_blank" href="/checkout">Added to Cart<i class="fa fa-shopping-cart"></i> ({{request.session.orderItemList | length}})</a>
+                </nav>
+            {% endif %}
+            <div class="jumbotron">
+
+                <h1 class="display-4">{{ product.name }}</h1>
+                <p class="lead">{{ product.description }}</p>
+                <hr class="my-4">
+                <figure class="figure">
+                    <img src="{{product.image_path}}" class="figure-img img-fluid rounded" alt="...">
+                    <figcaption class="figure-caption text-right">Gift voucher is available</figcaption>
+                </figure>
+                <hr class="my-4">
+
+                <span class="btn btn-primary">
+                     {{ product.unitPrice }} <span class="badge badge-light">CHF</span>
+                </span>
+                <a class="btn btn-primary btn-lg" href="#" role="button" style="float:right;">Add to Cart</a>
+                <hr class="my-4">
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% endblock content %}
+
+{% block javascripts %}
+{% endblock javascripts %}

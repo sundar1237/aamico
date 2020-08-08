@@ -1,0 +1,388 @@
+{% extends "layouts/base-site.html" %}
+{% block content %}
+
+<script>
+$(document).ready(function() {
+  $(".btn-action").click(function () {
+    var url1 = $(this).data("url");
+    $.ajax({
+        dataType: "html",
+        type: 'GET',
+        url: url1,
+        success: function(msg){
+            var result = $('<div />').append(msg).find('.modal-body').html();
+            $('.modal-body').html(result);
+            $('#myModal').modal('show');
+        }
+    });
+  });
+});
+</script>
+
+<script>
+$(document).on('change', '#no_of_items', function(){
+    var value = $(this).val();
+    var extra_price = parseFloat($('#extra_price').val());
+    var unitPrice = parseFloat($('#unitPrice').text());
+    var newValue = ((unitPrice + extra_price) * value ).toFixed(2);
+    $('#changed_items').text(value);
+    $('#changed_total').val(newValue);
+ });
+</script>
+
+<script>
+$(document).on('change', ':checkbox', function(){
+    var totalprice=0.0
+    var totaloptions=0
+    var totalfreeoptions=0
+    var value = 0
+    $(':checkbox:checked').each(function(i){
+        value = $(this).val()
+        totaloptions = totaloptions+1
+        totalprice = totalprice +  parseFloat($(this).val())
+        if (value==0){
+            totalfreeoptions=totalfreeoptions+1
+            if (totalfreeoptions>2){
+                totalprice = totalprice + 1
+                totalfreeoptions = totalfreeoptions-3
+            }
+        }
+    });
+    $('#extra_price').val(totalprice.toFixed(2));
+    $('#total_options').val(totaloptions);
+    $('#e_price').text(totalprice.toFixed(2));
+    var no_of_items = $('#no_of_items').val();
+    var unitPrice = $('#unitPrice').text();
+    var newValue = (( parseFloat(unitPrice) + totalprice ) * no_of_items).toFixed(2);
+    $('#changed_total').val(newValue);
+
+ });
+</script>
+
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="row">
+            <div class="col-md-12" style="margin:0.5%;padding:0.5%;">
+                <h2>Menu</h2>
+                <ul class="nav nav-tabs" id="tabs">
+                    <li class="nav-item">
+                        <a class="nav-link small text-uppercase active" data-target="#pizza" data-toggle="tab"
+                           href="">Pizza</a>
+                    </li>
+                    <li class="nav-item"><a class="nav-link small text-uppercase" data-target="#wings_fries"
+                                            data-toggle="tab"
+                                            href="">Pasta, Salat, Wings & Fries</a></li>
+
+                    <li class="nav-item"><a class="nav-link small text-uppercase" data-target="#zutaten"
+                                            data-toggle="tab"
+                                            href="">Zutaten</a></li>
+                </ul>
+                <br>
+                <div class="tab-content" id="tabsContent">
+                    <div class="tab-pane fade active show" id="pizza">
+                        <div class="row">
+                            <div class="col">
+
+                                <table class="table table-hover" style="background:#ffffe6;">
+                                    <thead>
+                                    <tr style="color:#b32d00;">
+                                        <th scope="col">Name</th>
+                                        <th scope="col">Description</th>
+                                        <th scope="col" style="width:15%">30cm</th>
+                                        <th scope="col" style="width:15%">40cm</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for row in pizza1 %}
+                                    <tr style="color:#b32d00;font-weight:bold;">
+                                        <td>{{ row.seqNo }}. {{ row.name }}</td>
+                                        <td><small>{{ row.description }}</small></td>
+                                        <td style="width:15%">
+                                            <button class="btn btn-success btn-sm btn-action" data-url="{% url 'show_atc' row.product30_id %}"
+                                                    style="padding:0px;margin:0px;color:white"
+                                                    type="button">
+                                                {{ row.price_30 }} <span class="badge badge-light"><i aria-hidden="true"
+                                                                                                      class="fa fa-cart-arrow-down"></i></span>
+                                            </button>
+                                        </td>
+                                        <td style="width:15%">
+                                            <button class="btn btn-success btn-sm btn-action" data-url="{% url 'show_atc' row.product40_id %}"
+                                                    style="padding:0px;margin:0px;color:white"
+                                                    type="button">
+                                                {{ row.price_40 }} <span class="badge badge-light"><i aria-hidden="true"
+                                                                                                      class="fa fa-cart-arrow-down"></i></span>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="col" >
+                                <table class="table table-hover" style="background:#ffffe6;">
+                                    <thead>
+                                    <tr style="color:#b32d00;">
+                                        <th scope="col">Name</th>
+                                        <th scope="col">Description</th>
+                                        <th scope="col" style="width:15%">30cm</th>
+                                        <th scope="col" style="width:15%">40cm</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for row in pizza2 %}
+                                    <tr style="color:#b32d00;font-weight:bold;">
+                                        <td>{{ row.seqNo }}. {{ row.name }}</td>
+                                        <td><small>{{ row.description }}</small></td>
+                                        <td style="width:15%">
+                                            <button class="btn btn-success btn-sm btn-action" data-url="{% url 'show_atc' row.product30_id %}"
+                                                    style="padding:0px;margin:0px;color:white"
+                                                    type="button">
+                                                {{ row.price_30 }} <span class="badge badge-light"><i aria-hidden="true"
+                                                                                                      class="fa fa-cart-arrow-down"></i></span>
+                                            </button>
+                                        </td>
+                                        <td style="width:15%">
+                                            <button class="btn btn-success btn-sm btn-action" data-url="{% url 'show_atc' row.product40_id %}"
+                                                    style="padding:0px;margin:0px;color:white"
+                                                    type="button">
+                                                {{ row.price_40 }} <span class="badge badge-light"><i aria-hidden="true"
+                                                                                                      class="fa fa-cart-arrow-down"></i></span>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="wings_fries">
+                        <div class="row">
+                            <div class="col">
+                                <nav aria-label="breadcrumb">
+                                    <ol class="breadcrumb">
+                                        <li aria-current="page" class="breadcrumb-item active">Wings & Fries (Klein)
+                                        </li>
+                                    </ol>
+                                </nav>
+                                <table class="table table-hover" style="background:#ffffe6;">
+                                    <thead>
+                                    <tr style="color:#b32d00;">
+                                        <th scope="col">Name</th>
+                                        <th scope="col">Description</th>
+                                        <th scope="col" style="width:15%">Price</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for row in wings_klein %}
+                                    <tr style="color:#b32d00;font-weight:bold;">
+                                        <td>{{ row.seqNo }}. {{ row.name }}</td>
+                                        <td><small>{{ row.description }}</small></td>
+                                        <td style="width:15%">
+                                            <button class="btn btn-success btn-sm btn-action" data-url="{% url 'show_atc' row.id %}"
+                                                    style="padding:0px;margin:0px;color:white"
+                                                    type="button">
+                                                {{ row.unitPrice }} <span class="badge badge-light"><i
+                                                    aria-hidden="true" class="fa fa-cart-arrow-down"></i></span>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+
+                                <nav aria-label="breadcrumb">
+                                    <ol class="breadcrumb">
+                                        <li aria-current="page" class="breadcrumb-item active">Pasta</li>
+                                    </ol>
+                                </nav>
+
+                                <table class="table table-hover" style="background:#ffffe6;">
+                                    <thead>
+                                    <tr style="color:#b32d00;">
+                                        <th scope="col">Name</th>
+                                        <th scope="col">Description</th>
+                                        <th scope="col" style="width:15%">Price</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for row in pasta %}
+                                    <tr style="color:#b32d00;font-weight:bold;">
+                                        <td>{{ row.seqNo }}. {{ row.name }}</td>
+                                        <td><small>{{ row.description }}</small></td>
+                                        <td style="width:15%">
+                                            <button class="btn btn-success btn-sm btn-action" data-url="{% url 'show_atc' row.id %}"
+                                                    style="padding:0px;margin:0px;color:white"
+                                                    type="button">
+                                                {{ row.unitPrice }} <span class="badge badge-light"><i
+                                                    aria-hidden="true" class="fa fa-cart-arrow-down"></i></span>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="col" >
+                                <nav aria-label="breadcrumb">
+                                    <ol class="breadcrumb">
+                                        <li aria-current="page" class="breadcrumb-item active">Wings & Fries (Grösse)
+                                        </li>
+                                    </ol>
+                                </nav>
+                                <table class="table table-hover" style="background:#ffffe6;">
+                                    <thead>
+                                    <tr style="color:#b32d00;">
+                                        <th scope="col">Name</th>
+                                        <th scope="col">Description</th>
+                                        <th scope="col" style="width:15%">Price</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for row in wings_gross %}
+                                    <tr style="color:#b32d00;font-weight:bold;">
+                                        <td>{{ row.seqNo }}. {{ row.name }}</td>
+                                        <td><small>{{ row.description }}</small></td>
+                                        <td style="width:15%">
+                                            <button class="btn btn-success btn-sm btn-action" data-url="{% url 'show_atc' row.id %}"
+                                                    style="padding:0px;margin:0px;color:white"
+                                                    type="button">
+                                                {{ row.unitPrice }} <span class="badge badge-light"><i
+                                                    aria-hidden="true" class="fa fa-cart-arrow-down"></i></span>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                                <nav aria-label="breadcrumb">
+                                    <ol class="breadcrumb">
+                                        <li aria-current="page" class="breadcrumb-item active">Salat</li>
+                                    </ol>
+                                </nav>
+                                <table class="table table-hover" style="background:#ffffe6;">
+                                    <thead>
+                                    <tr style="color:#b32d00;">
+                                        <th scope="col">Name</th>
+                                        <th scope="col">Description</th>
+                                        <th scope="col" style="width:15%">Price</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for row in salat %}
+                                    <tr style="color:#b32d00;font-weight:bold;">
+                                        <td>{{ row.seqNo }}. {{ row.name }}</td>
+                                        <td><small>{{ row.description }}</small></td>
+                                        <td style="width:15%">
+                                            <button class="btn btn-success btn-sm btn-action" data-url="{% url 'show_atc' row.id %}"
+                                                    style="padding:0px;margin:0px;color:white"
+                                                    type="button">
+                                                {{ row.unitPrice }} <span class="badge badge-light"><i
+                                                    aria-hidden="true" class="fa fa-cart-arrow-down"></i></span>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="zutaten">
+                        <div class="row">
+                            <div class="col">
+                                <table class="table table-hover" style="background:#ffffe6;">
+                                    <thead>
+                                    <tr style="color:#b32d00;">
+                                        <th scope="col">Name</th>
+                                        <!--<th scope="col">Type</th>-->
+                                        <th scope="col" style="width:15%">Price</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for row in extras1 %}
+                                    <tr style="color:#b32d00;font-weight:bold;">
+                                        <td>{{ row.seqNo }}. {{ row.name }}</td>
+<!--                                        <td><small>{{ row.type }}</small></td>-->
+                                        <td style="width:15%">
+                                            {{ row.unitPrice }}
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <div class="col">
+                                <table class="table table-hover" style="background:#ffffe6;">
+                                    <thead>
+                                    <tr style="color:#b32d00;">
+                                        <th scope="col">Name</th>
+                                        <!--<th scope="col">Type</th>-->
+                                        <th scope="col" style="width:15%">Price</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for row in extras2 %}
+                                    <tr style="color:#b32d00;font-weight:bold;">
+                                        <td>{{ row.seqNo }}. {{ row.name }}</td>
+<!--                                        <td><small>{{ row.type }}</small></td>-->
+                                        <td style="width:15%">
+                                            {{ row.unitPrice }}
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Modal -->
+            <div class="modal fade" id="myModal" role="dialog" tabindex="-1">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <form action="{% url 'atc' %}" method="post" name="atc">
+                            <div class="modal-header">
+                                <h5 class="modal-title"><font style="color:#999999;">Add to cart</font> <i class="fa fa-check-square" aria-hidden="true"></i></h5>
+                                <button aria-hidden="true" class="close" data-dismiss="modal" type="button">×</button>
+                            </div>
+                            <div class="modal-body">
+                                <!--<h5>Popover in a modal</h5>
+                                <p id="myid"/>
+                                <p>This <a class="btn btn-secondary popover-test"
+                                           data-content="Popover body content is set in this attribute." href="#"
+                                           role="button"
+                                           title="Popover title">button</a> triggers
+                                    a popover on click.</p>
+                                <hr>
+                                <h5>Tooltips in a modal</h5>
+                                <p>
+                                    <a class="tooltip-test" href="#" title="Tooltip">This link</a> and <a
+                                        class="tooltip-test" href="#" title="Tooltip">that link</a> have tooltips on hover.
+                                </p>-->
+                            </div>
+                            <div class="modal-footer">
+                                <button class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                <button class="btn btn-primary" type="submit" id="atc">Proceed</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <!-- Modal - show atc response -->
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% endblock content %}
+
+{% block javascripts %}
+{% endblock javascripts %}

@@ -1,0 +1,130 @@
+{% extends "layouts/base-site.html" %}
+{% block content %}
+
+
+
+<script>
+$(document).ready(function() {
+  $(".btn-action").click(function () {
+    var url1 = $(this).data("url");
+    $.ajax({
+        dataType: "html",
+        type: 'GET',
+        url: url1,
+        success: function(msg){
+            var result = $('<div />').append(msg).find('.modal-body').html();
+            $('.modal-body').html(result);
+            $('#myModal').modal('show');
+        }
+    });
+  });
+});
+</script>
+
+
+<script>
+$(document).on('change', '#no_of_items', function(){
+    var value = $(this).val();
+    var unitPrice = $('#unitPrice').text();
+    var newValue = (value * unitPrice).toFixed(2);
+    $('#changed_items').text(value);
+    $('#changed_total').text(newValue);
+ });
+</script>
+
+<script>
+$(document).ready(function() {
+    $('#myModal').on('hidden.bs.modal', function () {
+        location.reload();
+    }) });
+</script>
+
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            {% for row in list %}
+            <nav class="navbar navbar-light bg-light justify-content-between">
+                {% if request.session.orderItemList %}
+                    <a class="btn btn-warning btn-sm" role="button" target="_blank" href="/checkout" title="checkout">Added to Cart
+                                <i class="fa fa-shopping-cart"></i> ({{request.session.orderItemList | length}})</a>
+                {% else %}
+                    <a class="navbar-brand">{{row.productType.name}}</a>
+                {% endif %}
+                    <form class="form-inline">
+                        <input id="typeahead" class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+                        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+                    </form>
+            </nav>
+
+            {% for product in row.productList %}
+            <div class="card" id="product_card">
+                <a href="{% url 'product' product.id %}" target="_blank"
+                   title="{{product.name}} - {{product.description}}">
+                    <img class="img-thumbnail" src="{{product.image_path}}">
+                </a>
+                <div class="card-body" id="product_card_body">
+                    <p class="card-text" style="padding:2px;margin:2px;">
+                        <a href="{% url 'product' product.id %}" id="product_card_link" target="_blank"
+                           title="{{product.name}}">{{product.name}}</a>
+                        <span style="float:right;font-size:13px;">{{product.unitPrice}} CHF
+                            <button class="btn btn-link btn-action" data-url="{% url 'show_atc' product.id %}"
+                                    id="{{product.id}}" style="padding:0px;margin:0px;color:black">
+                            <i aria-hidden="true" class="fa fa-cart-arrow-down"></i>
+                        </button>
+                        </span>
+
+                    </p>
+                </div>
+            </div>
+
+
+            {% endfor %}
+            {% endfor %}
+            <!-- Button trigger modal -->
+
+            <!-- Modal -->
+            <div class="modal fade" id="myModal" role="dialog" tabindex="-1">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <form action="{% url 'atc' %}" method="get" name="atc">
+                            <div class="modal-header">
+                                <h5 class="modal-title"><font style="color:#999999;">Add to cart</font> <i class="fa fa-check-square" aria-hidden="true"></i></h5>
+                                <button aria-hidden="true" class="close" data-dismiss="modal" type="button">×</button>
+                            </div>
+                            <div class="modal-body">
+                                <!--<h5>Popover in a modal</h5>
+                                <p id="myid"/>
+                                <p>This <a class="btn btn-secondary popover-test"
+                                           data-content="Popover body content is set in this attribute." href="#"
+                                           role="button"
+                                           title="Popover title">button</a> triggers
+                                    a popover on click.</p>
+                                <hr>
+                                <h5>Tooltips in a modal</h5>
+                                <p>
+                                    <a class="tooltip-test" href="#" title="Tooltip">This link</a> and <a
+                                        class="tooltip-test" href="#" title="Tooltip">that link</a> have tooltips on hover.
+                                </p>-->
+                            </div>
+                            <div class="modal-footer">
+                                <button class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                <button class="btn btn-primary" type="submit" id="atc">Proceed</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <!-- Modal - show atc response -->
+        </div>
+    </div>
+</div>
+
+
+{% endblock content %}
+
+{% block javascripts %}
+{% endblock javascripts %}
+
+
+

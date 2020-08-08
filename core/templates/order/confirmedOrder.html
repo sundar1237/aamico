@@ -1,0 +1,161 @@
+{% extends "layouts/base-site.html" %}
+{% block content %}
+
+
+<script>
+$(document).ready(function(){
+  $('.popover-dismiss').popover({
+    trigger: 'focus'
+    })
+});
+</script>
+
+
+<style>
+    #div_print{
+        display:none;
+    }
+    #mytabl{
+
+    }
+</style>
+<script language="javascript">
+    function printdiv(elem)
+{
+    var mywindow = window.open('', 'PRINT', 'height=400,width=600');
+
+    mywindow.document.write('<html><head><title>' + document.title  + '</title>');
+    mywindow.document.write('<style>body{width:7.5in; font-family:"Courier New", Courier, monospace;font-size:12px;line-height:1.0;padding:1px;margin:1px;} table{ page-break-inside:auto; } th{ font-size:12px;font-weight:bold;text-align:left;border:1px solid lightgray; } td{ font-size:12px;border:1px solid lightgray; } tr { page-break-inside:auto; }</style>');
+    mywindow.document.write('</head><body >');
+
+    mywindow.document.write(document.getElementById(elem).innerHTML);
+    mywindow.document.write('</body></html>');
+
+    mywindow.document.close(); // necessary for IE >= 10
+    mywindow.focus(); // necessary for IE >= 10*/
+
+    mywindow.print();
+    mywindow.close();
+
+    return true;
+}
+</script>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="jumbotron jumbotron-fluid" style="margin:5px;padding:5px;">
+              <div class="container">
+                <h1 class="display-4" style="color:#009900">Confirmed Order</h1>
+                <p class="lead"><i class="fa fa-check-circle" aria-hidden="true"></i> Your order has been confirmed</p>
+              </div>
+            </div>
+
+            <nav aria-label="breadcrumb" style="margin:1px;padding:1px;">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item active" aria-current="page">Order Details</li>
+                </ol>
+            </nav>
+
+            <table class="table table-sm">
+              <thead>
+                <tr>
+                    <th scope="col">Nick Name</th>
+                      <th scope="col">Order Id</th>
+                      <th scope="col">Placed Date</th>
+                      <th scope="col">Status</th>
+                      <th scope="col">Payment Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>{{order.customer_nick_name}}</td>
+                  <td>{{order.id}}</td>
+                  <td>{{order.createDate | date:"D d M Y" }} {{ order.createDate | time:"H:i" }}</td>
+                  <td>{{order.status}}</td>
+                  <td>{{order.paymentStatus}}</td>
+                </tr>
+              </tbody>
+            </table>
+
+            <nav aria-label="breadcrumb" style="margin:1px;padding:1px;">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item active" aria-current="page">Order Item Details</li>
+                </ol>
+            </nav>
+
+            <table class="table table-hover" style="margin:5px;padding:5px;">
+              <thead>
+                <tr>
+                    <th scope="col">Name</th>
+                    <th scope="col">Unit Price</th>
+                    <th scope="col">Extras Price</th>
+                    <th scope="col">No of Items</th>
+                    <th scope="col">Total Price</th>
+                    <th scope="col">User Input</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for row in list %}
+                <tr>
+                    <td> {{row.product.name}}</td>
+                    <td>{{row.product.unitPrice | stringformat:".2f" }} </td>
+                    <td>
+                        {% if row.orderItem.extrasPrice > 0 %}
+                            <a tabindex="0" href="#" class="popover-dismiss" role="button" data-toggle="popover" data-trigger="focus" title="Extra Price Details" data-html="true" data-content="{{row.extrasListString}}">{{row.orderItem.extrasPrice | stringformat:".2f" }} </a>
+                        {%endif%}
+                    </td>
+                    <td>{{row.orderItem.noOfItems}}</td>
+                    <td>{{row.orderItem.totalPrice | stringformat:".2f"}} CHF</td>
+                    <td>
+                        {% if row.orderItem.userInput %}
+                            <a tabindex="0" href="#" class="popover-dismiss" role="button" data-toggle="popover" data-trigger="focus" title="User Input" data-html="true" data-content="{{row.orderItem.userInput}}"><i class="fa fa-info"></i></a>
+                        {%endif%}
+                    </td>
+                </tr>
+              {% endfor %}
+                <tr><td colspan="5">Delivery Type</td><td >{{order.deliveryType}}</td></tr>
+                <tr><td colspan="5">Payment Method</td><td >{{order.paymentMethod}}</td></tr>
+                <tr><td colspan="5">Total Items</td><td >{{order.total_noOfItems}}</td></tr>
+                <tr><td colspan="5">Total Price</td><td ><h4>{{order.totalPrice | stringformat:".2f"}} CHF</h4></td></tr>
+              </tbody>
+            </table>
+
+<div id="div_print" class="myclass">
+
+    <h3>AAmico Pizza</h3>
+    <p>Könizstrasse 4</p>
+    <p id="myp">3008 Bern</p>
+    <p>031 381 05 05</p>
+
+    <p>Order Number - {{order.id}}</p>
+    <p>Date - {{order.create_date}}</p>
+    <p>Name - {{order.customer_nick_name}}</p>
+    <table id="mytable">
+        <tr>
+            <th>Name</th><th>#</th><th>Total</th>
+        </tr>
+        {% for row in list %}
+        <tr>
+            <td><small>{{row.orderItem.seq_no}}.{{row.product.name}}</small></td><td>{{row.product.unitPrice | stringformat:".2f" }} x {{row.orderItem.no_of_items }}</td><td>{{row.orderItem.total_price | stringformat:".2f" }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <p>Total Items - {{order.total_no_of_items}}</p>
+    <p>Total Price - <strong>{{order.total_price | stringformat:".2f"}} CHF</strong></p>
+
+</div>
+
+
+
+            <!--<a href="#" onClick="javascript:printdiv('div_print')" class="btn btn-primary btn-lg btn-block">Print for slip</a>-->
+        </div>
+    </div>
+</div>
+
+
+{% endblock content %}
+
+{% block javascripts %}
+{% endblock javascripts %}

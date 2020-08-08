@@ -1,0 +1,165 @@
+{% extends "layouts/base-site.html" %}
+{% block content %}
+
+<script>
+$(document).ready(function() {
+  $("#paymentStatus").change(function () {
+    var id = $("#order_id").val();
+     if (confirm('change payment status?')) {
+        $.ajax({
+            dataType: "json",
+            type: 'GET',
+            url: '/updateOrderStatusAsPaid/'+id,
+            success: function(msg){
+                console.log(msg)
+            }
+        });
+        e.preventDefault()
+    }
+  });
+});
+
+</script>
+
+<script>
+$(document).ready(function() {
+    $('input[type=radio][name=status]').change(function() {
+        if (confirm('chanage order status ?')) {
+            var newValue = $(this).attr('id');
+            var id = $("#order_id").val();
+
+            $.ajax({
+            dataType: "json",
+            type: 'POST',
+            data:JSON.stringify({id: id, status: newValue}),
+            url: '/updateOrderStatus',
+            success: function(msg){
+                $("#mydialog").html(msg);
+            }
+            });
+        }
+    });
+});
+
+</script>
+
+{% if user.is_authenticated %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li aria-current="page" class="breadcrumb-item active"><small>Order > {{order.id}} >
+                        {{order.createDate | date:"D d M Y" }} {{ order.createDate | time:"H:i" }} >
+                        {{order.customer_nick_name}}</small>
+                    </li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+    <div class="row">
+        <input id="order_id" name="order_id" type="hidden" value="{{order.id}}"/>
+        <div class="col-md-6">
+            <table class="table table-sm">
+                <tbody>
+                <tr>
+                    <th scope="col">Id</th>
+                    <td>{{order.id}}</td>
+                </tr>
+                <tr>
+                    <th scope="col">Date</th>
+                    <td>{{order.createDate | date:"D d M Y" }} {{ order.createDate | time:"H:i" }}</td>
+                </tr>
+                <tr>
+                    <th scope="col">Customer Name</th>
+                    <td>{{order.customer_nick_name}}</td>
+                </tr>
+                <tr>
+                    <th scope="col">Status</th>
+                    <td>
+                        <div class="btn-group btn-group-toggle" data-toggle="buttons" id="mydialog">
+                            {{orderStatusValues | safe}}
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <th scope="col">Delivery Type</th>
+                    <td>{{order.deliveryType}}</td>
+                </tr>
+                <tr>
+                    <th scope="col">Payment Status</th>
+                    <td>
+                        {% if order.paymentStatus == 'Unpaid' %}
+                        <div class="custom-control custom-switch">
+                            <input class="custom-control-input" id="paymentStatus" name="paymentStatus"
+                                   type="checkbox" value="{{order.id}}">
+                            <label class="custom-control-label" for="paymentStatus">Change to 'Paid'</label>
+                        </div>
+                        {% else %}
+                        <span class="badge badge-pill badge-success">{{order.paymentStatus}}</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                <tr>
+                    <th scope="col">Total Price</th>
+                    <td>{{order.totalPrice | stringformat:".2f"}}</td>
+                </tr>
+                <tr>
+                    <th scope="col">Total no of Items</th>
+                    <td>{{order.total_noOfItems}}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li aria-current="page" class="breadcrumb-item active">Order Details</small>
+                    </li>
+                </ol>
+            </nav>
+
+            <table class="table table-hover" style="margin:5px;padding:5px;">
+                <thead>
+                <tr>
+
+                    <th scope="col">Type</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Description</th>
+                    <th scope="col">Unit Price</th>
+                    <th scope="col">No of Items</th>
+                    <th scope="col">Total Price</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for row in list %}
+                <tr>
+
+                    <td>{{row.product.productType |title}}</td>
+                    <td>{{row.product.name}}</td>
+                    <td>{{row.product.description}}</td>
+                    <td>{{row.product.unitPrice | stringformat:".2f" }}</td>
+                    <td>{{row.orderItem.noOfItems}}</td>
+                    <td>{{row.orderItem.totalPrice | stringformat:".2f"}} CHF</td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+</div>
+</div>
+{% else %}
+<p>You are not logged in</p>
+<a href="{% url 'login' %}">login</a>
+{% endif %}
+
+
+{% endblock content %}
+
+{% block javascripts %}
+{% endblock javascripts %}

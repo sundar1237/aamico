@@ -1,0 +1,75 @@
+{% extends "layouts/base-site.html" %}
+{% block content %}
+
+{% if user.is_authenticated %}
+  <div class="row">
+        <div class="col-md-12">
+            <table class="table table-hover">
+                <thead>
+                <tr>
+                    <th scope="col">Id</th>
+                    <th scope="col">Date</th>
+                    <th scope="col">Customer Name</th>
+                    <th scope="col">Status</th>
+                    <th scope="col">Payment Status</th>
+                    <th scope="col">Delivery Type</th>
+                    <th scope="col">Total Price</th>
+                    <th scope="col">No Of Items</th>
+                    <th scope="col">Extras</th>
+                    <th scope="col">User Input</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for row in orderList %}
+                <tr>
+                    <td><a href="{% url 'single_order' row.id %}">{{ row.id }}</a></td>
+                    <td><a href="{% url 'single_order' row.id %}">{{row.createDate | date:"D d M Y" }} {{ row.createDate | time:"H:i" }}</a></td>
+                    <td>{{row.customer_nick_name}}</td>
+                    <td>
+                        {% if row.status == 'New' %}
+                            <span class="badge badge-pill badge-light">{{row.status}}</span>
+                        {% elif row.status == 'Progress' %}
+                            <span class="badge badge-pill badge-primary">{{row.status}}</span>
+                        {% elif row.status == 'Ready' %}
+                            <span class="badge badge-pill badge-warning">{{row.status}}</span>
+                        {% elif row.status == 'Delivered' %}
+                            <span class="badge badge-pill badge-success">{{row.status}}</span>
+                        {% else %}
+                            <span class="badge badge-pill badge-danger">{{row.status}}</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if row.paymentStatus == 'Unpaid' %}
+                            <!--<div class="custom-control custom-switch">
+                                <input value="{{order.id}}" class="custom-control-input" id="paymentStatus" name="paymentStatus" type="checkbox">
+                                <label class="custom-control-label" for="paymentStatus">Unpaid</label>
+                            </div>-->
+                            <span class="badge badge-pill badge-danger">{{row.paymentStatus}}</span>
+                        {% else %}
+                            <span class="badge badge-pill badge-success">{{row.paymentStatus}}</span>
+                        {% endif %}
+                    </td>
+                    <td>{{row.deliveryType}}</td>
+                    <td>{{row.totalPrice | stringformat:".2f"}}</td>
+                    <td>{{row.total_noOfItems}}</td>
+                    <td>yes</td>
+                    <td>yes</td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+
+{% else %}
+  <p>You are not logged in</p>
+  <a href="{% url 'login' %}">login</a>
+{% endif %}
+
+
+
+{% endblock content %}
+
+{% block javascripts %}
+{% endblock javascripts %}

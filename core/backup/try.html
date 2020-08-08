@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Modal Popup</title>
+<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.1/themes/base/jquery-ui.css">
+<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+<script src="http://code.jquery.com/ui/1.10.1/jquery-ui.js"></script>
+
+</head>
+<body>
+<!-- <button id="dialog_trigger">open the dialog</button> -->
+<a href="#" id="dialog_trigger">open the dialog</a>
+<div id="dialog" style="display:none;" title="Dialog Title">
+<div id="small-dialog" class="modal-promo-box mfp-hide bg-lightest">
+  <h1>Dialog example</h1>
+  <p>This is dummy copy. It is not meant to be read. It has been placed.</p>
+</div>
+                                </a>
+                            </span>
+                        </p>
+                    </div>
+</div>
+<script>
+$( "#dialog_trigger" ).click(function() {
+$( "#dialog" ).dialog( "open" );
+});
+$("#dialog").dialog({
+    autoOpen: false,
+    position: 'top' ,
+    title: 'EDIT',
+    draggable: false,
+    width : 400,
+    height : 370, 
+    resizable : true,
+    modal : true,
+    open: function(){
+            jQuery('.ui-widget-overlay').bind('click',function(){
+                jQuery('#dialog').dialog('close');
+            })
+        }
+});
+$(".ui-dialog-titlebar").hide();
+
+
+</script>
+</body>
+</html>

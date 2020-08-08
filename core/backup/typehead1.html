@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Twitter Bootstrap TypeAhead Ajax Example</title>
+
+    <link rel="stylesheet" href='https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.0.3/css/bootstrap.min.css' media="screen" />
+    <link rel="Stylesheet" href="https://twitter.github.io/typeahead.js/css/examples.css" />
+    <script src='https://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.8.3.min.js'></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.0.3/js/bootstrap.min.js'></script>
+    <script src="https://cdn.rawgit.com/bassjobsen/Bootstrap-3-Typeahead/master/bootstrap3-typeahead.min.js"></script>
+	
+<script>
+    $(document).ready(function () {
+        BindControls();
+    });
+
+    function BindControls() {
+        $('#myBooks').typeahead({
+            source: function (request, response) {
+				alert(request)
+                $.ajax({
+                    url: "http://localhost:4500/productNameByText/" + request,
+                    dataType: "json",
+                    type: "GET",
+                    contentType: "application/json; charset=utf-8",
+                    success: function (data) {
+                        var arrBooks = [];
+                        response($.map(data, function (item) {
+                            arrBooks.push(item.BookName);
+                        }))
+                        response(arrBooks);
+
+                        // SET THE WIDTH AND HEIGHT OF UI AS "auto" ALONG WITH FONT.
+                        // YOU CAN CUSTOMIZE ITS PROPERTIES.
+                        $(".dropdown-menu").css("width", "auto");
+                        $(".dropdown-menu").css("height", "auto");
+                        $(".dropdown-menu").css("font", "15px Verdana");
+                    },
+                    error: function (XMLHttpRequest, textStatus, errorThrown) {
+                        alert(textStatus);
+                    }
+                });
+            },
+            hint: true,             // SHOW HINT (DEFAULT IS "true").
+            highlight: true,        // HIGHLIGHT (SET <strong> or <b> BOLD). DEFAULT IS "true".
+            minLength: 1            // MINIMUM 1 CHARACTER TO START WITH.
+        });
+    }
+</script>
+	
+</head>
+<body>
+    <div>
+        <input type="text" id="myBooks" placeholder="Search Your Book" />
+    </div>
+</body>
