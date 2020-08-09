@@ -8,7 +8,7 @@ from django.urls import path
 
 from app import views
 import urllib
-
+from django.views.decorators.csrf import csrf_exempt
 
 
 urlpatterns = [
@@ -21,7 +21,7 @@ urlpatterns = [
     path('view_order/<int:pk>', views.view_order, name='view_order'),
     path('orders', views.orders, name='orders'),
     path('single_order/<int:pk>', views.single_order, name='single_order'),
-    path('updateOrderStatusAsPaid/<int:pk>', views.updateOrderStatusAsPaid, name='updateOrderPayStatus'),
+    path('updateOrderStatusAsPaid/<int:pk>', csrf_exempt(views.updateOrderStatusAsPaid), name='updateOrderPayStatus'),
     path('updateOrderStatus', views.updateOrderStatus, name='updateOrderStatus'),
 
 
