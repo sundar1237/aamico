@@ -22,7 +22,7 @@ urlpatterns = [
     path('orders', views.orders, name='orders'),
     path('single_order/<int:pk>', views.single_order, name='single_order'),
     path('updateOrderStatusAsPaid/<int:pk>', csrf_exempt(views.updateOrderStatusAsPaid), name='updateOrderPayStatus'),
-    path('updateOrderStatus', views.updateOrderStatus, name='updateOrderStatus'),
+    path('updateOrderStatus', csrf_exempt(views.updateOrderStatus), name='updateOrderStatus'),
 
 
 ]
