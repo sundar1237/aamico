@@ -299,7 +299,7 @@ def getOrderStatusValue(order):
     return response
 
 
-@api_view(['POST'])
+@api_view(['GET'])
 # @permission_classes([IsAuthenticated])
 def updateOrderStatus(request):
     if request.body:

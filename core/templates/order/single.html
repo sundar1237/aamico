@@ -30,7 +30,7 @@ $(document).ready(function() {
 
             $.ajax({
             dataType: "json",
-            type: 'POST',
+            type: 'GET',
             data:JSON.stringify({id: id, status: newValue}),
             url: '/updateOrderStatus',
             success: function(msg){
