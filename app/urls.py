@@ -7,7 +7,6 @@ Copyright (c) 2019 - present AppSeed.us
 from django.urls import path
 
 from app import views
-import urllib
 from django.views.decorators.csrf import csrf_exempt
 
 
