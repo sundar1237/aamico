@@ -27,7 +27,6 @@ CSRF_TRUSTED_ORIGINS = [config('PRODUCTION_SERVER', default='127.0.0.1')]
 # Application definition
 
 INSTALLED_APPS = [
-
     'django.contrib.postgres',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -56,7 +55,7 @@ MIDDLEWARE = [
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 ROOT_URLCONF = 'core.urls'
-LOGIN_REDIRECT_URL = "orders"  # Route defined in app/urls.py
+LOGIN_REDIRECT_URL = "home"  # Route defined in app/urls.py
 LOGOUT_REDIRECT_URL = "home"  # Route defined in app/urls.py
 TEMPLATE_DIR = os.path.join(BASE_DIR, "core/templates")  # ROOT dir for templates
 

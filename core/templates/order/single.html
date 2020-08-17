@@ -30,8 +30,9 @@ $(document).ready(function() {
 
             $.ajax({
             dataType: "json",
-            type: 'GET',
-            data:JSON.stringify({id: id, status: newValue}),
+            type: 'POST',
+            data:{id: id, status: newValue},
+            headers: { "X-CSRFToken": $.cookie("csrftoken") },
             url: '/updateOrderStatus',
             success: function(msg){
                 $("#mydialog").html(msg);
@@ -43,7 +44,7 @@ $(document).ready(function() {
 
 </script>
 
-{% if user.is_authenticated %}
+
 <div class="container">
     <div class="row">
         <div class="col-md-12">
@@ -153,10 +154,6 @@ $(document).ready(function() {
 </div>
 </div>
 </div>
-{% else %}
-<p>You are not logged in</p>
-<a href="{% url 'login' %}">login</a>
-{% endif %}
 
 
 {% endblock content %}

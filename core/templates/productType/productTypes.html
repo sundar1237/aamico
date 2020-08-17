@@ -346,7 +346,7 @@ $(document).on('change', ':checkbox', function(){
             <div class="modal fade" id="myModal" role="dialog" tabindex="-1">
                 <div class="modal-dialog modal-lg">
                     <div class="modal-content">
-                        <form action="{% url 'atc' %}" method="post" name="atc">
+                        <form action="{% url 'atc' %}" method="get" name="atc">
                             <div class="modal-header">
                                 <h5 class="modal-title"><font style="color:#999999;">Add to cart</font> <i class="fa fa-check-square" aria-hidden="true"></i></h5>
                                 <button aria-hidden="true" class="close" data-dismiss="modal" type="button">×</button>
